@@ -1,11 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import contactsRouter from "./routes/contactsRouter.js";
-import userRouter from "./routes/usersRouter.js"
-dotenv.config()
-
+import userRouter from "./routes/usersRouter.js";
+import connectDB from "./db/connect.js";
+dotenv.config();
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
 
-app.use('/users', userRouter)
+app.use("/users", userRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -26,6 +26,8 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
+connectDB().then(() => {
+  app.listen(3000, () => {
+    console.log("Server is running. Use our API on port: 3000");
+  });
 });
