@@ -7,7 +7,7 @@ import userRouter from "./routes/usersRouter.js";
 import connectDB from "./db/connect.js";
 
 dotenv.config();
-const {PORT} = process.env
+const { PORT } = process.env;
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/contacts", contactsRouter);
+app.use("/contacts", contactsRouter);
 
 app.use("/users", userRouter);
 
