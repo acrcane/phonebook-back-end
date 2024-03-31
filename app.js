@@ -5,7 +5,9 @@ import dotenv from "dotenv";
 import contactsRouter from "./routes/contactsRouter.js";
 import userRouter from "./routes/usersRouter.js";
 import connectDB from "./db/connect.js";
+
 dotenv.config();
+const {PORT} = process.env
 
 const app = express();
 
@@ -27,7 +29,7 @@ app.use((err, req, res, next) => {
 });
 
 connectDB().then(() => {
-  app.listen(3000, () => {
-    console.log("Server is running. Use our API on port: 3000");
+  app.listen(PORT, () => {
+    console.log(`Server is running. Use our API on port: ${PORT}`);
   });
 });

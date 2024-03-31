@@ -1,12 +1,13 @@
 import express from "express";
-import { userSchema } from "../schemas/usersSchemas.js";
+import { signupSchema, loginSchema } from "../schemas/usersSchemas.js";
 import validateBody from "../helpers/validateBody.js";
-import { signup } from "../controllers/usersControllers.js";
+import { signup, login, logout } from "../controllers/usersControllers.js";
+import {validToken} from "../middlewares/isValidToken.js"
 const userRouter = express.Router();
 
-userRouter.post("/signup", validateBody(userSchema), signup);
-userRouter.post("/login");
-userRouter.post("/logout");
-userRouter.get("/current");
+userRouter.post("/signup", validateBody(signupSchema), signup);
+userRouter.post("/login", validateBody(loginSchema), login);
+userRouter.post("/logout",validToken, logout );
+userRouter.get("/current", validToken);
 
 export default userRouter;
