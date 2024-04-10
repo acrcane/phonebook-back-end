@@ -35,3 +35,5 @@ export const createUser = async (userData) => {
 export const logoutService = async (id) => {
   await User.findByIdAndUpdate(id, { token: "" });
 };
+
+export const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);

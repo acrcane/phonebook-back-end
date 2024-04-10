@@ -1,10 +1,18 @@
-import { isUserExists, createUser } from "../services/userServices.js";
+import {
+  isUserExists,
+  createUser,
+  updateUser,
+} from "../services/userServices.js";
 import HttpError from "../helpers/HttpError.js";
+import path from "path";
+import fs from "fs/promises";
+import Jimp from "jimp";
 import {
   updateUserWithToken,
   logoutService,
 } from "../services/userServices.js";
 
+const avatarPath = path.resolve("public", "avatars");
 export const signup = async (req, res, next) => {
   const { email, name } = req.body;
   try {
@@ -13,6 +21,7 @@ export const signup = async (req, res, next) => {
       throw HttpError(409, "user with already exists");
     }
     const newUser = await createUser(req.body);
+
     res.status(201).json({
       token: newUser.token,
       user: {
@@ -59,5 +68,21 @@ export const getCurrent = (req, res) => {
     name,
     email,
     avatar,
+  });
+};
+
+export const updateAvatars = async (req, res) => {
+  const { path: oldPath, filename } = req.file;
+  const { _id } = req.user;
+  const newPath = path.join(avatarPath, filename);
+
+  const resizedAvatar = await Jimp.read(oldPath);
+  await resizedAvatar.resize(250, 250).write(oldPath);
+
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("avatars", filename);
+  await updateUser({ _id }, { avatarURL: avatar });
+  res.json({
+    avatarURL: avatar,
   });
 };
